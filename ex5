@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* newNode(int val) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->val = val;
+    n->left = n->right = NULL;
+    return n;
+}
+
+int areCousins(Node* root, int x, int y) {
+    Node* queue[100];
+    Node* parent[100];
+    int front = 0, rear = 0;
+
+    queue[rear] = root;
+    parent[rear++] = NULL;
+
+    while (front < rear) {
+        int size = rear - front;
+        Node* px = NULL, * py = NULL;
+
+        for (int i = 0; i < size; i++) {
+            Node* node = queue[front];
+            Node* par = parent[front++];
+
+            if (node->val == x) px = par;
+            if (node->val == y) py = par;
+
+            if (node->left) {
+                queue[rear] = node->left;
+                parent[rear++] = node;
+            }
+            if (node->right) {
+                queue[rear] = node->right;
+                parent[rear++] = node;
+            }
+        }
+
+        if (px && py) return px != py;
+        if (px || py) return 0;
+    }
+
+    return 0;
+}
+
+int main() {
+    Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->right = newNode(4);
+    root->right->right = newNode(5);
+
+    if (areCousins(root, 4, 5))
+        printf("Sunt verisori\n");
+    else
+        printf("Nu sunt verisori\n");
+
+    return 0;
+}
