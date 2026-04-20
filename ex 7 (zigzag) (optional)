@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* newNode(int val) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->val = val;
+    n->left = n->right = NULL;
+    return n;
+}
+
+int maxZigZag = 0;
+
+// dir: 0 = mergem stanga, 1 = mergem dreapta
+void dfs(Node* root, int dir, int length) {
+    if (!root) return;
+
+    if (length > maxZigZag)
+        maxZigZag = length;
+
+    if (dir == 0) {
+        // am mers stanga → acum mergem dreapta
+        dfs(root->right, 1, length + 1);
+        // restart zigzag din copilul stanga
+        dfs(root->left, 0, 1);
+    }
+    else {
+        // am mers dreapta → acum mergem stanga
+        dfs(root->left, 0, length + 1);
+        // restart zigzag din copilul dreapta
+        dfs(root->right, 1, 1);
+    }
+}
+
+int longestZigZag(Node* root) {
+    if (!root) return 0;
+
+    dfs(root->left, 0, 1);
+    dfs(root->right, 1, 1);
+
+    return maxZigZag;
+}
+
+int main() {
+    /*
+            1
+           / \
+          2   3
+           \   \
+            4   5
+           /
+          6
+    */
+
+    Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+    root->left->right = newNode(4);
+    root->right->right = newNode(5);
+    root->left->right->left = newNode(6);
+
+    printf("Cel mai lung ZigZag: %d\n", longestZigZag(root));
+
+    return 0;
+}
