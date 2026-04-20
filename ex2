@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* newNode(int val) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->val = val;
+    n->left = n->right = NULL;
+    return n;
+}
+
+int isBSTUtil(Node* root, int min, int max) {
+    if (!root) return 1;
+
+    if (root->val <= min || root->val >= max)
+        return 0;
+
+    return isBSTUtil(root->left, min, root->val) &&
+        isBSTUtil(root->right, root->val, max);
+}
+
+int isBST(Node* root) {
+    return isBSTUtil(root, INT_MIN, INT_MAX);
+}
+
+int main() {
+    Node* root = newNode(10);
+    root->left = newNode(5);
+    root->right = newNode(20);
+
+    if (isBST(root))
+        printf("Este BST\n");
+    else
+        printf("Nu este BST\n");
+
+    return 0;
+}
