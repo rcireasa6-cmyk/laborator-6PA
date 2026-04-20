@@ -1,0 +1,91 @@
+[22:16, 4/20/2026] Vasile Leucemie: #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* newNode(int val) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->val = val;
+    n->left = n->right = NULL;
+    return n;
+}
+
+int height(Node* root) {
+    if (!root) return 0;
+
+    int l = height(root->left);
+    if (l == -1) return -1;
+
+    int r = height(root->right);
+    if (r == -1) return -1;
+
+    if (abs(l - r) > 1) return -1;
+
+    return (l > r ? l : r) + 1;
+}
+
+int isBalanced(Node* root) {
+    return height(root) != -1;
+}
+
+int main() {
+    Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+
+    if (isBalanced(root))
+        printf("Echilibrat\n");
+    else
+        printf("Nu este echilibrat\n");
+
+    return 0;
+}
+[22:16, 4/20/2026] Vasile Leucemie: ex2
+[22:16, 4/20/2026] Vasile Leucemie: #include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* newNode(int val) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->val = val;
+    n->left = n->right = NULL;
+    return n;
+}
+
+int isBSTUtil(Node* root, int min, int max) {
+    if (!root) return 1;
+
+    if (root->val <= min || root->val >= max)
+        return 0;
+
+    return isBSTUtil(root->left, min, root->val) &&
+        isBSTUtil(root->right, root->val, max);
+}
+
+int isBST(Node* root) {
+    return isBSTUtil(root, INT_MIN, INT_MAX);
+}
+
+int main() {
+    Node* root = newNode(10);
+    root->left = newNode(5);
+    root->right = newNode(20);
+
+    if (isBST(root))
+        printf("Este BST\n");
+    else
+        printf("Nu este BST\n");
+
+    return 0;
+}
