@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* newNode(int val) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->val = val;
+    n->left = n->right = NULL;
+    return n;
+}
+
+Node* LCA(Node* root, Node* p, Node* q) {
+    if (!root) return NULL;
+
+    if (root == p || root == q)
+        return root;
+
+    Node* left = LCA(root->left, p, q);
+    Node* right = LCA(root->right, p, q);
+
+    if (left && right) return root;
+
+    return left ? left : right;
+}
+
+int main() {
+    Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+
+    Node* lca = LCA(root, root->left, root->right);
+    printf("LCA: %d\n", lca->val);
+
+    return 0;
+}
