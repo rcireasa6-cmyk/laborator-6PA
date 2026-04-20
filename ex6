@@ -1,0 +1,5 @@
+/*Arbore AVL:Este un arbore binar de căutare auto-echilibrat, în care diferența de înălțime dintre subarborele stâng și drept pentru orice nod este cel mult 1.
+Dacă devine dezechilibrat, se reechilibrează prin rotații.Asigură operații rapide: O(log n).
+
+Arbore B (B-Tree):Este un arbore de căutare în care un nod poate avea mai mulți copii și mai multe chei.
+Este mereu echilibrat și toate frunzele sunt la același nivel.Se folosește în baze de date și sisteme de fișiere pentru eficiență la accesul pe disc.*/
