@@ -1,0 +1,78 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node {
+    int val;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+Node* newNode(int val) {
+    Node* n = (Node*)malloc(sizeof(Node));
+    n->val = val;
+    n->left = n->right = NULL;
+    return n;
+}
+
+// 🔹 SERIALIZARE
+void serialize(Node* root, char* result, int size) {
+    if (!root) {
+        strcat_s(result, size, "N ");
+        return;
+    }
+
+    char buffer[20];
+    sprintf_s(buffer, sizeof(buffer), "%d ", root->val);
+    strcat_s(result, size, buffer);
+
+    serialize(root->left, result, size);
+    serialize(root->right, result, size);
+}
+
+// 🔹 DESERIALIZARE
+Node* deserialize(char** data) {
+    if (**data == '\0') return NULL;
+
+    if (**data == 'N') {
+        *data += 2;
+        return NULL;
+    }
+
+    int val = strtol(*data, data, 10);
+    (*data)++;
+
+    Node* root = newNode(val);
+    root->left = deserialize(data);
+    root->right = deserialize(data);
+
+    return root;
+}
+
+// 🔹 AFIȘARE
+void inorder(Node* root) {
+    if (!root) return;
+    inorder(root->left);
+    printf("%d ", root->val);
+    inorder(root->right);
+}
+
+int main() {
+    Node* root = newNode(1);
+    root->left = newNode(2);
+    root->right = newNode(3);
+
+    char result[1000] = "";
+
+    serialize(root, result, sizeof(result));
+    printf("Serialized: %s\n", result);
+
+    char* ptr = result;
+    Node* newRoot = deserialize(&ptr);
+
+    printf("Inorder dupa deserialize: ");
+    inorder(newRoot);
+
+    return 0;
+}
